@@ -1,0 +1,51 @@
+{
+    "name": "nomanismail/mediapanel",
+    "description": "Laravel Media Panel with crop, resize, multi-size images, Blade + Tailwind CSS",
+    "type": "library",
+    "version": "1.0.0",
+    "keywords": [
+        "laravel",
+        "media",
+        "image",
+        "upload",
+        "tailwind",
+        "blade"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Noman Ismail",
+            "email": "nomanismail@example.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^12.0",
+        "illuminate/database": "^12.0",
+        "illuminate/http": "^12.0",
+        "illuminate/routing": "^12.0",
+        "intervention/image": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "NomanIsmail\\MediaPanel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NomanIsmail\\MediaPanel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NomanIsmail\\MediaPanel\\MediaPanelServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
