@@ -52,20 +52,32 @@ class MediaPanel {
                 }
             });
 
-            const result = await response.json();
-            if (result.success && result.html) {
-                this.createModal(result.html);
-                this.attachEventListeners();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const result = await response.json();
+                if (result.success && result.html) {
+                    this.createModal(result.html);
+                    this.attachEventListeners();
+                    // Load media after modal is created
+                    await this.loadMedia();
+                } else {
+                    throw new Error(result.message || 'Failed to load MediaPanel');
+                }
             } else {
                 // Fallback: try HTML response
-                const htmlResponse = await fetch(`${this.baseUrl}/mediapanel`);
-                const html = await htmlResponse.text();
+                const html = await response.text();
                 this.createModal(html);
                 this.attachEventListeners();
+                // Load media after modal is created
+                await this.loadMedia();
             }
         } catch (error) {
             console.error('Failed to load MediaPanel:', error);
-            alert('Failed to load Media Panel');
+            alert('Failed to load Media Panel: ' + error.message);
         }
     }
 
@@ -444,9 +456,11 @@ window.mediaPanelInstance = new MediaPanel({
 
 // Auto-initialize buttons with data-mediapanel attribute
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize buttons with data-mediapanel attribute
     document.querySelectorAll('[data-mediapanel]').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const options = {
                 targetInput: this.dataset.targetInput || null,
@@ -455,8 +469,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 multiple: this.dataset.multiple === 'true',
             };
 
-            window.mediaPanelInstance.open(options);
+            if (window.mediaPanelInstance) {
+                window.mediaPanelInstance.open(options);
+            } else {
+                console.error('MediaPanel instance not initialized');
+                alert('MediaPanel is not initialized. Please refresh the page.');
+            }
         });
+    });
+    
+    // Also handle buttons with class mediapanel-trigger (for backward compatibility)
+    document.querySelectorAll('.mediapanel-trigger').forEach(button => {
+        if (!button.hasAttribute('data-mediapanel')) {
+            button.setAttribute('data-mediapanel', 'true');
+        }
     });
 });
 
