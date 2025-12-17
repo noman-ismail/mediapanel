@@ -7,7 +7,7 @@ use NomanIsmail\MediaPanel\Traits\ImageUploadTrait;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
-class MediaService
+class MediaService extends BaseService
 {
     use ImageUploadTrait;
 
@@ -50,7 +50,7 @@ class MediaService
             // Store media record
             $media = $this->mediaRepository->store([
                 'name' => $name,
-                'path' => config('media.path'),
+                'path' => config('media.path', 'media'),
                 'mime' => $file->getMimeType(),
                 'size' => $file->getSize(),
                 'width' => $dimensions['width'],
@@ -62,22 +62,9 @@ class MediaService
                 'description' => $metadata['description'] ?? null,
             ]);
 
-            return [
-                'success' => true,
-                'message' => 'Image uploaded successfully',
-                'data' => $media,
-            ];
+            return $this->success($media, 'Image uploaded successfully');
         } catch (\Throwable $e) {
-            Log::error('Media upload failed: ' . $e->getMessage(), [
-                'file' => $file->getClientOriginalName(),
-                'error' => $e->getTraceAsString(),
-            ]);
-
-            return [
-                'success' => false,
-                'message' => 'Media upload failed: ' . $e->getMessage(),
-                'data' => null,
-            ];
+            return $this->handleException($e, 'Media upload failed');
         }
     }
 
@@ -93,19 +80,9 @@ class MediaService
         try {
             $media = $this->mediaRepository->update($id, $data);
 
-            return [
-                'success' => true,
-                'message' => 'Media updated successfully',
-                'data' => $media,
-            ];
+            return $this->success($media, 'Media updated successfully');
         } catch (\Throwable $e) {
-            Log::error('Media update failed: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Media update failed: ' . $e->getMessage(),
-                'data' => null,
-            ];
+            return $this->handleException($e, 'Media update failed');
         }
     }
 
@@ -121,23 +98,12 @@ class MediaService
             $deleted = $this->mediaRepository->delete($id);
 
             if ($deleted) {
-                return [
-                    'success' => true,
-                    'message' => 'Media deleted successfully',
-                ];
+                return $this->success(null, 'Media deleted successfully');
             }
 
-            return [
-                'success' => false,
-                'message' => 'Media not found',
-            ];
+            return $this->error('Media not found');
         } catch (\Throwable $e) {
-            Log::error('Media delete failed: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Media delete failed: ' . $e->getMessage(),
-            ];
+            return $this->handleException($e, 'Media delete failed');
         }
     }
 
@@ -152,18 +118,9 @@ class MediaService
         try {
             $media = $this->mediaRepository->all($filters);
 
-            return [
-                'success' => true,
-                'data' => $media,
-            ];
+            return $this->success($media);
         } catch (\Throwable $e) {
-            Log::error('Media fetch failed: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Failed to fetch media',
-                'data' => [],
-            ];
+            return $this->handleException($e, 'Failed to fetch media');
         }
     }
 
@@ -178,18 +135,9 @@ class MediaService
         try {
             $media = $this->mediaRepository->search($query);
 
-            return [
-                'success' => true,
-                'data' => $media,
-            ];
+            return $this->success($media);
         } catch (\Throwable $e) {
-            Log::error('Media search failed: ' . $e->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Search failed',
-                'data' => [],
-            ];
+            return $this->handleException($e, 'Media search failed');
         }
     }
 }

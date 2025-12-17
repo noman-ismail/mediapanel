@@ -45,7 +45,7 @@ class MediaPanel {
      */
     async loadModal() {
         try {
-            const response = await fetch(`${this.baseUrl}/media`, {
+            const response = await fetch(`${this.baseUrl}/mediapanel`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
@@ -58,7 +58,7 @@ class MediaPanel {
                 this.attachEventListeners();
             } else {
                 // Fallback: try HTML response
-                const htmlResponse = await fetch(`${this.baseUrl}/media`);
+                const htmlResponse = await fetch(`${this.baseUrl}/mediapanel`);
                 const html = await htmlResponse.text();
                 this.createModal(html);
                 this.attachEventListeners();
@@ -120,8 +120,8 @@ class MediaPanel {
 
         try {
             const url = folderId 
-                ? `${this.baseUrl}/media/folder?${params}`
-                : `${this.baseUrl}/media?${params}`;
+                ? `${this.baseUrl}/mediapanel/folder?${params}`
+                : `${this.baseUrl}/mediapanel?${params}`;
 
             const response = await fetch(url, {
                 headers: {
@@ -384,7 +384,7 @@ class MediaPanel {
         uploadArea.innerHTML = '<p class="text-indigo-600">Uploading...</p>';
 
         try {
-            const response = await fetch(`${this.baseUrl}/media`, {
+            const response = await fetch(`${this.baseUrl}/mediapanel`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': this.csrfToken,

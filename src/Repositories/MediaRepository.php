@@ -67,7 +67,7 @@ class MediaRepository implements MediaRepositoryInterface
         $media = $this->find($id);
         
         if (!$media) {
-            throw new \Exception("Media not found");
+            throw new \RuntimeException("Media not found with ID: {$id}");
         }
 
         $media->update($data);

@@ -17,14 +17,15 @@ A modern, clean architecture Laravel package for media file management with imag
 - 🔌 **Editor Integration** - Seamless integration with TinyMCE, CKEditor, Quill
 - ⚡ **Clean Architecture** - Controller → Service → Repository → Trait pattern
 - 🎛️ **Highly Configurable** - Customize sizes, quality, storage disk via config
-- 🚀 **Laravel 12+ Ready** - Built for Laravel 12 and PHP 8.3+
+- 🚀 **Laravel 10+ Compatible** - Works with Laravel 10, 11, and 12
+- 📦 **Standalone Package** - Works independently in any Blade project
 
 ## 📋 Requirements
 
-- PHP >= 8.3
-- Laravel >= 12.0
-- Intervention Image >= 3.0
-- Tailwind CSS (for frontend styling)
+- PHP >= 8.1
+- Laravel >= 10.0 (10, 11, or 12)
+- Intervention Image >= 2.7 or >= 3.0
+- Tailwind CSS (optional, for frontend styling)
 
 ## 📦 Installation
 
@@ -420,7 +421,7 @@ Please see [CHANGELOG.md](CHANGELOG.md) for more information on what has changed
 
 ## 🔒 Security
 
-If you discover any security-related issues, please email nomanismail@example.com instead of using the issue tracker.
+If you discover any security-related issues, please email nomii.uol@gmail.com instead of using the issue tracker.
 
 ## 📄 License
 
@@ -431,7 +432,7 @@ The MIT License (MIT). Please see [LICENSE](LICENSE) file for more information.
 **Noman Ismail**
 
 - GitHub: [@noman-ismail](https://github.com/noman-ismail)
-- Email: nomanismail@example.com
+- Email: nomii.uol@gmail.com
 
 ## 🙏 Acknowledgments
 
@@ -445,7 +446,7 @@ Give a ⭐️ if this project helped you!
 
 ## 📞 Support
 
-For support, email nomanismail@example.com or create an issue in the [GitHub repository](https://github.com/noman-ismail/mediapanel/issues).
+For support, email nomii.uol@gmail.com or create an issue in the [GitHub repository](https://github.com/noman-ismail/mediapanel/issues).
 
 ---
 

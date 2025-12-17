@@ -45,7 +45,7 @@ class MediaController extends Controller
             ]);
         }
 
-        // Otherwise return full page
+        // Otherwise return full page (standalone interface)
         return view('mediapanel::index', compact('media'));
     }
 
@@ -57,8 +57,10 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
+        $maxSize = (config('media.max_size', 5120)) * 1024; // Convert KB to bytes
+        
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:' . (config('media.max_size') * 1024),
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:' . $maxSize,
             'folder_id' => 'nullable|integer|exists:media_folders,id',
             'title' => 'nullable|string|max:255',
             'alt' => 'nullable|string|max:255',

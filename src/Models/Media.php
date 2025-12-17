@@ -63,7 +63,10 @@ class Media extends Model
      */
     public function getOriginalUrlAttribute()
     {
-        return Storage::disk(config('media.disk'))->url($this->path . '/original/' . $this->name);
+        $disk = config('media.disk', 'public');
+        $path = $this->path ?: config('media.path', 'media');
+        
+        return Storage::disk($disk)->url($path . '/original/' . $this->name);
     }
 
     /**
@@ -74,16 +77,19 @@ class Media extends Model
      */
     public function getUrl(string $size = 'original')
     {
+        $disk = config('media.disk', 'public');
+        $path = $this->path ?: config('media.path', 'media');
+        
         if ($size === 'original') {
-            return $this->original_url;
+            return Storage::disk($disk)->url($path . '/original/' . $this->name);
         }
 
-        $sizes = config('media.sizes');
+        $sizes = config('media.sizes', []);
         if (!isset($sizes[$size])) {
             return $this->original_url;
         }
 
-        return Storage::disk(config('media.disk'))->url($this->path . '/' . $size . '/' . $this->name);
+        return Storage::disk($disk)->url($path . '/' . $size . '/' . $this->name);
     }
 
     /**
@@ -94,7 +100,8 @@ class Media extends Model
     public function getAvailableSizes()
     {
         $sizes = ['original'];
-        $sizes = array_merge($sizes, array_keys(config('media.sizes')));
+        $configSizes = config('media.sizes', []);
+        $sizes = array_merge($sizes, array_keys($configSizes));
         
         return $sizes;
     }
@@ -107,11 +114,14 @@ class Media extends Model
      */
     public function sizeExists(string $size)
     {
+        $disk = config('media.disk', 'public');
+        $path = $this->path ?: config('media.path', 'media');
+        
         if ($size === 'original') {
-            return Storage::disk(config('media.disk'))->exists($this->path . '/original/' . $this->name);
+            return Storage::disk($disk)->exists($path . '/original/' . $this->name);
         }
 
-        return Storage::disk(config('media.disk'))->exists($this->path . '/' . $size . '/' . $this->name);
+        return Storage::disk($disk)->exists($path . '/' . $size . '/' . $this->name);
     }
 
     /**
@@ -121,16 +131,18 @@ class Media extends Model
      */
     public function deleteFiles()
     {
-        $disk = Storage::disk(config('media.disk'));
+        $disk = config('media.disk', 'public');
+        $path = $this->path ?: config('media.path', 'media');
+        $storage = Storage::disk($disk);
         $sizes = $this->getAvailableSizes();
 
         foreach ($sizes as $size) {
             $filePath = $size === 'original' 
-                ? $this->path . '/original/' . $this->name
-                : $this->path . '/' . $size . '/' . $this->name;
+                ? $path . '/original/' . $this->name
+                : $path . '/' . $size . '/' . $this->name;
 
-            if ($disk->exists($filePath)) {
-                $disk->delete($filePath);
+            if ($storage->exists($filePath)) {
+                $storage->delete($filePath);
             }
         }
 
